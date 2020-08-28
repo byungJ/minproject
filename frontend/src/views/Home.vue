@@ -1,144 +1,118 @@
+<style>
+.table {
+  border: none;
+  text-align: center;
+  text-decoration: none;
+}
+button {
+ color: blue;
+}
+</style>
 <template>
-  <div class="home">
-    <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
-    <div id="header" v-if="isAuthorized">
-      <button id="login" @click="onClickLogout">Logout</button>
-      <router-link :to="{ name: 'Home' }"
-          class="nav-link"
-          active-class="active">
-        Home
-      </router-link>
-      <router-link :to="{ name: 'About' }"
-          class="nav-link"
-          active-class="active">
-        About Us
-      </router-link>
-      <router-link :to="{ name: 'Test' }"
-          class="nav-link"
-          active-class="active">
-        Test
-      </router-link>
-      <router-link :to="{ name: 'Todo' }"
-          class="nav-link"
-          active-class="active">
-        Todo
-      </router-link>
-      <router-link :to="{ name: 'Concave' }"
-          class="nav-link"
-          active-class="active">
-        Concave
-      </router-link>
-      <router-link :to="{ name: 'BoardListPage' }"
-          class="nav-link"
-          active-class="active">
-        Board
-      </router-link>
-      <router-link :to="{ name: 'VuetifyBoard' }"
-          class="nav-link"
-          active-class="active">
-        VuetifyBoard
-      </router-link>
-      <router-link :to="{ name: 'VuetifyBoardListPage' }"
-          class="nav-link"
-          active-class="active">
-        VuetifyBoardListPage
-      </router-link>
-      <router-link :to="{ name: 'CrawlCategory' }"
-          class="nav-link"
-          active-class="active">
-        CrawlCategory
-      </router-link>
-      <h2>This is an Home Page</h2>
-      <div id="app">
-        {{ message }}<br>
-      </div>
-      <div>
-        <br><span>{{ myinfo.auth }}계정, 접속을 환영합니다.</span>
-      </div>
-    </div>
-    <div id="header" v-else>
-      <button id="login" @click="$router.push('LoginPage')">
-        Login
-      </button>
-      <button id="login" @click="$router.push('AdminSetupPage')">
-        Register Admin
-      </button>
-      <router-link :to="{ name: 'Home' }"
-          class="nav-link"
-          active-class="active">
-        Home
-      </router-link>
-      <router-link :to="{ name: 'About' }"
-          class="nav-link"
-          active-class="active">
-        About Us
-      </router-link>
-    </div>
-  </div>
+  <Layout>
+    <template #menubar>
+     <div id="header" v-if="isAuthorized">
+      <v-btn rounded @click="$router.push('MyHome')" color="orange dark white--text" style="margin: 3px">myinfo</v-btn>
+      <v-btn rounded @click="$router.push('StudyRegister')" color="orange dark white--text" style="margin: 3px">Create study</v-btn>
+      <v-btn rounded @click="onClickLogout" color="orange dark white--text" style="margin: 3px">LOGOUT</v-btn>
+     </div>
+     <div id="header" v-else>
+     <v-btn rounded @click="$router.push('Login')" color="orange dark white--text" style="margin: 3px">LOGIN</v-btn>
+     <v-btn rounded @click="$router.push('SignUp')" color="orange dark white--text" style="margin: 3px">SingUp</v-btn>
+     </div>
+    </template>
+    <template #content>
+      <v-simple-table>
+        <template v-slot:default>
+          <thead>
+            <tr>
+              <th class="text-center" style="font-size:20px">스터디 이름</th>
+              <th class="text-center" style="font-size:20px">지역명</th>
+              <th class="text-center" style="font-size:20px">시작일</th>
+               <th class="text-center" style="font-size:20px">종료일</th>
+                <th class="text-center" style="font-size:20px">과목명</th>
+                <th class="text-center" style="font-size:20px">담기</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="page in pageArray" :key="page.sno">
+              <td class ="table"><a @click="clickNews(page.studyname)">{{ page.studyname }}</a></td>
+              <td class ="table"><a @click="clickNews(page.studyname)">{{ page.area }}</a></td>
+              <td class ="table"><a @click="clickNews(page.studyname)">{{ page.start }}</a></td>
+              <td class ="table"><a @click="clickNews(page.studyname)">{{ page.end }}</a></td>
+              <td class ="table"><a @click="clickNews(page.studyname)">{{ page.subject }}</a></td>
+              <td class ="table"><v-btn rounded @click="onClick(page.sno)" color="blue dark white--text" style="margin: 3px">수강신청</v-btn></td>
+            </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
+    </template>
+  </Layout>
 </template>
 
 <script>
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
-/* eslint-disable no-unused-vars */
-import store from '../store'
-import Vue from 'vue'
-// import cookies from 'vue-cookies'
-
+import Layout from '../components/Layout'
 import { mapState, mapGetters, mapActions } from 'vuex'
-
-// Vue.use(cookies)
+import axios from 'axios'
 
 export default {
-  name: 'Home',
-  data: function () {
-    return {
-      message: 'Vue Test Message'
-    }
+  components: { Layout },
+  computed: {
+    paginatedData () {
+      const start = this.pageNum * this.pageSize
+      const end = start + this.pageSize
+      return this.listArray.slice(start, end)
+    },
+    ...mapState({
+      lists: state => state.lists
+    }),
+    ...mapState(['myinfo']),
+    ...mapGetters(['isAuthorized'])
   },
   methods: {
+    clickNews (sno) {
+      console.log('clickNews: ' + sno)
+      this.$store.dispatch('crawlFindOne', sno)
+    },
+    start (category) {
+      this.$store.dispatch('crawlFind', category)
+    },
+    onClick (sno) {
+      console.log('myinfo onSubmit()')
+      axios.post('http://localhost:7777/myinfo', { sno })
+        .then(res => {
+          console.log(res.data)
+          alert('신청완료!!')
+          this.$router.push({
+            name: 'Home',
+            params: { sno: res.data.sno.toString() }
+          })
+        })
+        .catch(err => {
+          alert(err.response.data.message)
+        })
+    },
     onClickLogout () {
       this.logout()
-      alert('Success Logout')
+      alert('로그아웃 했습니다.')
       this.$router.push({ name: 'Home' })
     },
     ...mapActions(['logout'])
   },
-  computed: {
-    ...mapState(['myinfo']),
-    ...mapGetters(['isAuthorized'])
+  data () {
+    return {
+      pageArray: []
+    }
   },
-  components: {
+  created () {
+    axios.get('http://localhost:7777/boards')
+      .then(res => {
+        console.log(res)
+        this.pageArray = res.data
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }
 </script>
-
-<style scoped>
-div {
-  border: 1px solid #ccc;
-}
-
-#header {
-  padding: 15px;
-  margin-bottom: 15px;
-  margin: 5px 5px;
-}
-
-img {
-  width: auto;
-  height: auto;
-  max-width: 1000px;
-  max-height: 350px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-#login {
-  background-color: #77aadd;
-  color: #ffffff;
-  font-weight: bold;
-  float: right;
-}
-
-</style>

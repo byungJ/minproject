@@ -28,13 +28,13 @@ export default {
     axios.get('http://localhost:7777/' + `${category}`)
       .then(({ data }) => {
         commit('CRAWLSTART', data)
-        if (window.location.pathname !== '/CrawlCategory') {
-          router.push('/CrawlCategory')
+        if (window.location.pathname !== '/') {
+          router.push('/')
         }
       })
   },
-  async crawlFindOne ({ commit }, newsNo) {
-    axios.get('http://localhost:7777/news/' + `${newsNo}`)
+  async crawlFindOne ({ commit }, sno) {
+    axios.get('http://localhost:7777/boards/' + `${sno}`)
       .then(({ data }) => {
         console.log('/news/newsNo res: ' + data)
         commit('FINDONE', data)

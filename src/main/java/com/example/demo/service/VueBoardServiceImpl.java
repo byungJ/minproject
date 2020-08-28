@@ -17,13 +17,13 @@ public class VueBoardServiceImpl implements  VueBoardService {
     private VueBoardRepository repository;
 
     @Override
-    public void register(VueBoard board) throws Exception {
-        repository.create(board);
+    public void register(VueBoard sno) throws Exception {
+        repository.create(sno);
     }
     @Override
-    public VueBoard read(Long boardNo) throws Exception {
-        log.info("VueBoardService read(boardNo): " + boardNo);
-        return repository.read(boardNo);
+    public VueBoard read(Long sno) throws Exception {
+        log.info("VueBoardService read(sno): " + sno);
+        return repository.read(sno);
     }
     @Override
     public void modify(VueBoard board) throws Exception {
@@ -31,8 +31,8 @@ public class VueBoardServiceImpl implements  VueBoardService {
         repository.update(board);
     }
     @Override
-    public void remove(Long boardNo) throws Exception {
-        repository.delete(boardNo);
+    public void remove(Long sno) throws Exception {
+        repository.delete(sno);
     }
     @Override
     public List<VueBoard> list() throws Exception {

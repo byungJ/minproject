@@ -20,7 +20,7 @@
                 dark
                 flat
               >
-                <v-toolbar-title>Login</v-toolbar-title>
+                <v-toolbar-title>SingUp</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on }">
@@ -38,13 +38,13 @@
                 </v-tooltip>
               </v-toolbar>
               <v-card-text>
-                <v-form class="form-signin" @submit.prevent="submit">
+                <v-form @submit.prevent="submit">
                   <v-text-field
                     label="ID"
                     name="login"
                     prepend-icon="mdi-account"
                     type="text"
-                    v-model="userid"
+                    v-model="userId"
                   ></v-text-field>
 
                   <v-text-field
@@ -53,11 +53,20 @@
                     name="password"
                     prepend-icon="mdi-lock"
                     type="password"
-                    v-model="password"
+                    v-model="userPw"
                   ></v-text-field>
+
+                  <v-text-field
+                    label="Nickname"
+                    name="login"
+                    prepend-icon="mdi-account"
+                    type="text"
+                    v-model="userName"
+                  ></v-text-field>
+
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" type="submit">Login</v-btn>
+                    <v-btn color="primary" type="submit">SingUp</v-btn>
                   </v-card-actions>
                 </v-form>
               </v-card-text>
@@ -71,11 +80,12 @@
 
 <script>
 export default {
-  name: 'LoginForm',
+  name: 'SignUpForm',
   data () {
     return {
-      userid: '',
-      password: ''
+      userId: '',
+      userName: '',
+      userPw: ''
     }
   },
   props: {
@@ -83,9 +93,15 @@ export default {
   },
   methods: {
     submit () {
-      console.log('LoginForm submit()')
-      const { userid, password } = this
-      this.$emit('submit', { userid, password })
+      if (this.userId === '' || this.userName === '' || this.userPw === '') {
+        alert('모든항목을 입력해주세요.')
+        return
+      }
+      console.log('this: ' + this.userId +
+                  ', ' + this.userName +
+                  ', ' + this.userPw)
+      const { userId, userName, userPw } = this
+      this.$emit('submit', { userId, userName, userPw })
     }
   }
 }

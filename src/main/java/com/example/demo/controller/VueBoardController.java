@@ -3,8 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.entity.VueBoard;
 import com.example.demo.service.VueBoardService;
 import lombok.extern.java.Log;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +10,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @Log
@@ -27,10 +24,10 @@ public class VueBoardController {
 
     @GetMapping("/{boardNo}")
     public ResponseEntity<VueBoard> read(
-            @PathVariable("boardNo") Long boardNo) throws Exception {
+            @PathVariable("boardNo") Long sno) throws Exception {
         log.info("read()");
 
-        VueBoard board = service.read(boardNo);
+        VueBoard board = service.read(sno);
         System.out.println("VueBoardController: " + board);
 
         return new ResponseEntity<VueBoard>(board, HttpStatus.OK);
@@ -51,7 +48,7 @@ public class VueBoardController {
 
         service.register(board);
 
-        log.info("register board.getBoardNo() = " + board.getBoardNo());
+        log.info("register board.getBoardNo() = " + board.getSno());
 
         /*
         URI resourceURI = uriBuilder.path("boards/{boardNo}")
@@ -67,10 +64,10 @@ public class VueBoardController {
 
     @DeleteMapping("/{boardNo}")
     public ResponseEntity<Void> remove(
-            @PathVariable("boardNo") Long boardNo) throws Exception {
+            @PathVariable("boardNo") Long sno) throws Exception {
         log.info("remove");
 
-        service.remove(boardNo);
+        //service.remove(sno);
 
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
@@ -82,8 +79,8 @@ public class VueBoardController {
         log.info("Put - modify()");
         System.out.println(board);
 
-        board.setBoardNo(boardNo);
-        service.modify(board);
+        //board.setSno(sno);
+        //service.modify(board);
 
         return new ResponseEntity<>(board, HttpStatus.OK);
     }

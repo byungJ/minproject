@@ -10,9 +10,11 @@ import java.util.Date;
 @Setter
 @ToString
 public class VueBoard {
-    private long boardNo;
-    private String title;
-    private String content;
-    private String writer;
-    private Date regDate;
+    private long sno;
+    private String studyname;
+    private String area;
+    private String start;
+    private String end;
+    private String subject;
+    private String email;
 }

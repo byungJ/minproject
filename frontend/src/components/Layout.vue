@@ -7,7 +7,8 @@
       dark
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title><div @click="home">Crawl Project</div></v-toolbar-title>
+      <v-icon>mdi-pen</v-icon>
+      <v-toolbar-title><div @click="home">Hello Study</div></v-toolbar-title>
       <v-spacer></v-spacer>
       <slot name="menubar"></slot>
     </v-app-bar>
@@ -18,7 +19,7 @@
       <v-list dense>
         <v-list-item @click.stop="left = !left">
           <v-list-item-action>
-            <v-icon>mdi-exit-to-app</v-icon>
+            <v-icon>mdi-tennis</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title @click="home">홈으로 이동</v-list-item-title>
@@ -32,29 +33,7 @@
             <v-icon>mdi-exit-to-app</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title @click="category">카테고리별 분류 보기</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-
-      <v-list dense>
-        <v-list-item @click.stop="left = !left">
-          <v-list-item-action>
-            <div>>>></div>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title @click="suggest">추천 뉴스 보기</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-
-      <v-list dense>
-        <v-list-item @click.stop="left = !left">
-          <v-list-item-action>
-            <v-icon>mdi-exit-to-app</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title @click="savednews()">저장된 뉴스 보기</v-list-item-title>
+            <v-list-item-title @click="category">추천 스터디 보기</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -73,7 +52,7 @@
       class="white--text"
     >
       <v-spacer></v-spacer>
-      <span>&copy; Crawl Project</span>
+      <span>&copy; Hello Study</span>
     </v-footer>
   </v-app>
 </template>
