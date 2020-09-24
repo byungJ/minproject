@@ -1,6 +1,5 @@
 package com.example.demo.repository;
 
-import com.example.demo.entity.MyInfo;
 import com.example.demo.entity.VueBoard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,46 +25,46 @@ public class VueBoardRepository {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
-            new PreparedStatementCreator() {
-                @Override
-                public PreparedStatement createPreparedStatement(Connection con)
-                        throws SQLException {
-                    PreparedStatement ps = con.prepareStatement(query, new String[] {"sno"});
-                    ps.setString(1, board.getStudyname());
-                    ps.setString(2, board.getArea());
-                    ps.setString(3, board.getStart());
-                    ps.setString(4, board.getEnd());
-                    ps.setString(5, board.getSubject());
-                    ps.setString(6, board.getEmail());
-                    return ps;
-                }
-            }, keyHolder);
+                new PreparedStatementCreator() {
+                    @Override
+                    public PreparedStatement createPreparedStatement(Connection con)
+                            throws SQLException {
+                        PreparedStatement ps = con.prepareStatement(query, new String[]{"sno"});
+                        ps.setString(1, board.getStudyname());
+                        ps.setString(2, board.getArea());
+                        ps.setString(3, board.getStart());
+                        ps.setString(4, board.getEnd());
+                        ps.setString(5, board.getSubject());
+                        ps.setString(6, board.getEmail());
+                        return ps;
+                    }
+                }, keyHolder);
 
         board.setSno(keyHolder.getKey().longValue());
     }
 
     public VueBoard read(Long boardNo) throws Exception {
         List<VueBoard> results = jdbcTemplate.query(
-            "select studyname, area, start, end, subject " +
-                    "from study_board where sno = ?",
-            new RowMapper<VueBoard>() {
-                @Override
-                public VueBoard mapRow(ResultSet rs, int rowNum)
-                        throws SQLException {
-                    VueBoard board = new VueBoard();
+                "select studyname, area, start, end, subject " +
+                        "from study_board where sno = ?",
+                new RowMapper<VueBoard>() {
+                    @Override
+                    public VueBoard mapRow(ResultSet rs, int rowNum)
+                            throws SQLException {
+                        VueBoard board = new VueBoard();
 
-                    board.setSno(rs.getInt("sno"));
-                    board.setStudyname(rs.getString("studyname"));
-                    board.setArea(rs.getString("area"));
-                    board.setStart(rs.getString("start"));
-                    board.setEnd(rs.getString("end"));
-                    board.setSubject(rs.getString("subject"));
+                        board.setSno(rs.getInt("sno"));
+                        board.setStudyname(rs.getString("studyname"));
+                        board.setArea(rs.getString("area"));
+                        board.setStart(rs.getString("start"));
+                        board.setEnd(rs.getString("end"));
+                        board.setSubject(rs.getString("subject"));
 
-                    System.out.println("VueBoardRepository: " + board);
+                        System.out.println("VueBoardRepository: " + board);
 
-                    return board;
-                }
-            }, boardNo
+                        return board;
+                    }
+                }, boardNo
         );
 
         return results.isEmpty() ? null : results.get(0);
@@ -105,4 +104,30 @@ public class VueBoardRepository {
         return results;
     }
 
+    public List<VueBoard> search(String search) {
+        List<VueBoard> results = jdbcTemplate.query(
+                "select sno,studyname, area, start, end, subject " +
+                        "from study_board where studyname LIKE ?",
+                new RowMapper<VueBoard>() {
+                    @Override
+                    public VueBoard mapRow(ResultSet rs, int rowNum)
+                            throws SQLException {
+                        VueBoard board = new VueBoard();
+
+                        board.setSno(rs.getInt("sno"));
+                        board.setStudyname(rs.getString("studyname"));
+                        board.setArea(rs.getString("area"));
+                        board.setStart(rs.getString("start"));
+                        board.setEnd(rs.getString("end"));
+                        board.setSubject(rs.getString("subject"));
+
+                        System.out.println("VueBoardRepository: " + board);
+
+                        return board;
+                    }
+                }, "%"+search+"%"
+        );
+
+        return results;
+    }
 }

@@ -38,4 +38,9 @@ public class VueBoardServiceImpl implements  VueBoardService {
     public List<VueBoard> list() throws Exception {
         return repository.list();
     }
+
+    @Override
+    public List<VueBoard> search(String search) throws Exception {
+        return repository.search(search);
+    }
 }

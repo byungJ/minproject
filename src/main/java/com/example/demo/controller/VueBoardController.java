@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.MyInfo;
 import com.example.demo.entity.VueBoard;
 import com.example.demo.service.VueBoardService;
 import lombok.extern.java.Log;
@@ -38,6 +39,14 @@ public class VueBoardController {
         log.info("list()");
 
         return new ResponseEntity<>(service.list(), HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{search}")
+    public ResponseEntity<List<VueBoard>> search(
+            @PathVariable("search") String search
+    ) throws Exception {
+        log.info("list()");
+        return new ResponseEntity<>(service.search(search), HttpStatus.OK);
     }
 
     @PostMapping("")

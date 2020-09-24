@@ -22,7 +22,7 @@
               <td class ="table"><a @click="clickNews(page.studyname)">{{ page.studyname }}</a></td>
               <td class ="table"><a @click="clickNews(page.studyname)">{{ page.start }}</a></td>
               <td class ="table"><a @click="clickNews(page.studyname)">{{ page.end }}</a></td>
-              <td class ="table"><v-btn rounded @click="onClick(page.sno)" color="blue dark white--text" style="margin: 3px">수강취소</v-btn></td>
+              <td class ="table"><v-btn rounded @click="onProccess(page.sno)" color="blue dark white--text" style="margin: 3px">수강취소</v-btn></td>
             </tr>
           </tbody>
         </template>
@@ -49,6 +49,18 @@ export default {
     clickNews (newsNo) {
       console.log('clickNews: ' + newsNo)
       this.$store.dispatch('crawlFindOne', newsNo)
+    },
+    onProccess (sno) {
+      console.log('myinfo onDelete(): ' + sno)
+      axios.post('http://localhost:7777/myinfo/delete', { sno })
+        .then(res => {
+          console.log(res.data)
+          alert('수강이 취소되었습니다!!')
+          this.$router.push({ name: 'Home' })
+        })
+        .catch(err => {
+          alert(err.response.data.message)
+        })
     },
     start (category) {
       this.$store.dispatch('crawlFind', category)

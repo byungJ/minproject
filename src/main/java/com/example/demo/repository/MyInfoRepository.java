@@ -42,7 +42,7 @@ public class MyInfoRepository {
 
     public List<VueBoard> list(Long userNo) throws Exception {
         List<VueBoard> results = jdbcTemplate.query(
-                "select sb.studyname,sb.start,sb.end" +
+                "select sb.sno,sb.studyname,sb.start,sb.end" +
                         " from study_board sb" +
                         " JOIN myinfo as my " +
                         " ON sb.sno = my.sno" +
@@ -51,6 +51,7 @@ public class MyInfoRepository {
                     @Override
                     public VueBoard mapRow(ResultSet rs, int rowNum) throws SQLException {
                         VueBoard vueBoard = new VueBoard();
+                        vueBoard.setSno(rs.getLong("sno"));
                         vueBoard.setStudyname(rs.getString("studyname"));
                         vueBoard.setStart(rs.getString("start"));
                         vueBoard.setEnd(rs.getString("end"));
@@ -61,5 +62,29 @@ public class MyInfoRepository {
 
         return results;
     }
+
+    public void delete(VueBoard vueBoard,Long userNo) throws Exception {
+        String query  = "delete from myinfo where sno = ? and user_no = ?";
+        jdbcTemplate.update(query, vueBoard.getSno(),userNo);
+    }
+
+    public MyInfo findByBoardId(MyInfo  myInfo) throws Exception {
+        List<MyInfo> results = jdbcTemplate.query(
+                "select info_id" +
+                        " from myinfo where sno = ? and user_no = ?",
+                new RowMapper<MyInfo>() {
+                    @Override
+                    public MyInfo mapRow(ResultSet rs, int rowNum)
+                            throws SQLException {
+                        MyInfo myInfo = new MyInfo();
+
+                        myInfo.setInfo_id(rs.getInt("info_id"));
+
+                        return myInfo;
+                    }
+                }, myInfo.getSno(),myInfo.getUser_no());
+        return results.isEmpty() ? null : results.get(0);
+    }
+
 }
 

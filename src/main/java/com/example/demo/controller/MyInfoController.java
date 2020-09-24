@@ -23,18 +23,28 @@ public class MyInfoController {
     private MyInfoService service;
 
     @PostMapping("")
-    public ResponseEntity<String> register(
+    public ResponseEntity<Boolean> register(
             @Validated @RequestBody MyInfo info,
             UriComponentsBuilder uriBuilder,@RequestHeader (name="Authorization") String header ) throws Exception {
         log.info("POST register()");
         Long userNo = AuthUtil.getUserNo(header);
         info.setUser_no(userNo);
-        service.register(info);
+        Boolean mck = service.register(info);
         log.info(info.toString());
         log.info("register info.getInfo_id() = " + info.getInfo_id());
+        return new ResponseEntity<Boolean>(mck, HttpStatus.OK);
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<String> delete(
+            @Validated @RequestBody VueBoard vueBoard,
+            UriComponentsBuilder uriBuilder,@RequestHeader (name="Authorization") String header ) throws Exception {
+        log.info("POST delete()");
+        Long userNo = AuthUtil.getUserNo(header);
+        service.remove(vueBoard,userNo);
 
 
-        return new ResponseEntity<String>("수강신청완료", HttpStatus.OK);
+        return new ResponseEntity<String>("수강취소", HttpStatus.OK);
     }
 
 

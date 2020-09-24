@@ -10,4 +10,5 @@ public interface VueBoardService {
     public void modify(VueBoard board) throws Exception;
     public void remove(Long boardNo) throws Exception;
     public List<VueBoard> list() throws Exception;
+    public List<VueBoard> search(String search) throws Exception;
 }

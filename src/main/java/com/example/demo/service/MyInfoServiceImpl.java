@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Member;
 import com.example.demo.entity.MyInfo;
 import com.example.demo.entity.VueBoard;
 import com.example.demo.repository.MyInfoRepository;
@@ -17,9 +18,23 @@ public class MyInfoServiceImpl implements  MyInfoService {
     @Autowired
     private MyInfoRepository repository;
 
+
+
     @Override
-    public void register(MyInfo myInfo) throws Exception {
-        repository.create(myInfo);
+    public Boolean register(MyInfo myInfo) throws Exception {
+        if(!((repository.findByBoardId(myInfo)) ==null)){
+            System.out.println("이미 수강");
+            return false;
+        } else {
+            repository.create(myInfo);
+            return true;
+        }
+    }
+
+    @Override
+    public void remove(VueBoard vueBoard, Long userNo) throws Exception {
+        System.out.println(vueBoard.getSno());
+        repository.delete(vueBoard,userNo);
     }
 //    @Override
 //    public VueBoard read(Long sno) throws Exception {
@@ -31,10 +46,7 @@ public class MyInfoServiceImpl implements  MyInfoService {
 //        log.info("MyInfoService modify(board): " + myInfo);
 //        repository.update(myInfo);
 //    }
-//    @Override
-//    public void remove(Long sno) throws Exception {
-//        repository.delete(sno);
-//    }
+
     @Override
     public List<VueBoard> list(Long userNo) throws Exception {
         return repository.list(userNo);

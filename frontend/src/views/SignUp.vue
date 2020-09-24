@@ -22,10 +22,17 @@ export default {
       axios.post('http://localhost:7777/users/setup',
         { userId, userName, userPw })
         .then(res => {
-          alert('회원가입에 성공했습니다!!')
-          this.$router.push({
-            name: 'Home'
-          })
+          if (res.data) {
+            alert('회원가입이 성공했습니다.')
+            this.$router.push({
+              name: 'Home'
+            })
+          } else {
+            alert('이미 가입 되어있는 아이디 입니다.')
+            this.$router.push({
+              name: 'SignUp'
+            })
+          }
         })
         .catch(err => {
           alert(err.response.data)

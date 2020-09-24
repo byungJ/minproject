@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,18 +28,22 @@ public class MemberServiceImpl implements MemberService {
         memEntity.setUserName(member.getUserName());
         memEntity.setJob(member.getJob());
 
-        MemberAuth memberAuth = new MemberAuth();
-        memberAuth.setAuth("ROLE_MEMBER");
+            MemberAuth memberAuth = new MemberAuth();
+            memberAuth.setAuth("ROLE_MEMBER");
+           memEntity.addAuth(memberAuth);
+           repository.save(memEntity);
+           member.setUserNo(memEntity.getUserNo());
 
-        memEntity.addAuth(memberAuth);
-
-        repository.save(memEntity);
-
-        member.setUserNo(memEntity.getUserNo());
+    }
+    private Boolean validateDuplicateMember(Member member) {
+        if(!(repository.findByUserId(member.getUserId()).isEmpty())){
+            return true;
+        }
+            return false;
     }
 
     @Override
-    public void setupAdmin(Member member) throws Exception {
+    public Boolean setupAdmin(Member member) throws Exception {
         Member memEntity = new Member();
         memEntity.setUserId(member.getUserId());
         memEntity.setUserPw(member.getUserPw());
@@ -48,9 +53,15 @@ public class MemberServiceImpl implements MemberService {
         MemberAuth memberAuth = new MemberAuth();
         memberAuth.setAuth("ROLE_ADMIN");
 
-        memEntity.addAuth(memberAuth);
-
-        repository.save(memEntity);
+        Boolean mck = validateDuplicateMember(memEntity);
+        if(mck) {
+            System.out.println("이미 존재");
+            return false;
+        }else {
+            memEntity.addAuth(memberAuth);
+            repository.save(memEntity);
+            return true;
+        }
     }
 
     @Override

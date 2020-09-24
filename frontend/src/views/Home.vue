@@ -15,13 +15,28 @@ button {
       <v-btn rounded @click="$router.push('MyHome')" color="orange dark white--text" style="margin: 3px">myinfo</v-btn>
       <v-btn rounded @click="$router.push('StudyRegister')" color="orange dark white--text" style="margin: 3px">Create study</v-btn>
       <v-btn rounded @click="onClickLogout" color="orange dark white--text" style="margin: 3px">LOGOUT</v-btn>
-     </div>
+      </div>
      <div id="header" v-else>
      <v-btn rounded @click="$router.push('Login')" color="orange dark white--text" style="margin: 3px">LOGIN</v-btn>
      <v-btn rounded @click="$router.push('SignUp')" color="orange dark white--text" style="margin: 3px">SingUp</v-btn>
      </div>
     </template>
     <template #content>
+    <div>
+    <v-col sm ="3">
+      <v-row>
+      <v-text-field
+        flat
+        solo-inverted
+        hide-details
+        prepend-inner-icon="mdi-magnify"
+        label="Search"
+        class="hidden-sm-and-down"
+        v-model="search"
+        @input="handlerSearchInput"
+        @keydown.tab="KeydownTab"></v-text-field></v-row>
+       </v-col>
+    </div>
       <v-simple-table>
         <template v-slot:default>
           <thead>
@@ -36,7 +51,7 @@ button {
           </thead>
           <tbody>
             <tr v-for="page in pageArray" :key="page.sno">
-              <td class ="table"><a @click="clickNews(page.studyname)">{{ page.studyname }}</a></td>
+              <td class cd ="table"><a @click="clickNews(page.studyname)">{{ page.studyname }}</a></td>
               <td class ="table"><a @click="clickNews(page.studyname)">{{ page.area }}</a></td>
               <td class ="table"><a @click="clickNews(page.studyname)">{{ page.start }}</a></td>
               <td class ="table"><a @click="clickNews(page.studyname)">{{ page.end }}</a></td>
@@ -81,16 +96,36 @@ export default {
       console.log('myinfo onSubmit()')
       axios.post('http://localhost:7777/myinfo', { sno })
         .then(res => {
-          console.log(res.data)
-          alert('신청완료!!')
-          this.$router.push({
-            name: 'Home',
-            params: { sno: res.data.sno.toString() }
-          })
+          if (res.data) {
+            alert('수강신청 성공.')
+            this.$router.push({
+              name: 'Home'
+            })
+          } else {
+            alert('이미 신청한 강의입니다.')
+            this.$router.push({
+              name: 'Home'
+            })
+          }
         })
         .catch(err => {
           alert(err.response.data.message)
         })
+    },
+    handlerSearchInput (search) {
+      if (search !== '') {
+        axios.get('http://localhost:7777/boards/search/' + search)
+          .then(res => {
+            console.log(res)
+            this.pageArray = res.data
+          })
+          .catch(err => {
+            console.log(err)
+          })
+        this.$router.push({ name: 'Home' })
+      } else {
+        this.pageArray = this.pageArray2
+      }
     },
     onClickLogout () {
       this.logout()
@@ -101,7 +136,9 @@ export default {
   },
   data () {
     return {
-      pageArray: []
+      pageArray: [],
+      pageArray2: [],
+      search: ''
     }
   },
   created () {
@@ -109,6 +146,7 @@ export default {
       .then(res => {
         console.log(res)
         this.pageArray = res.data
+        this.pageArray2 = res.data
       })
       .catch(err => {
         console.log(err)

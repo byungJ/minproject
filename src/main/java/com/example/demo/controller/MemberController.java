@@ -86,9 +86,8 @@ public class MemberController {
     }
 
     @RequestMapping(value = "/setup",
-            method = RequestMethod.POST,
-            produces = "text/plain;charset=UTF-8")
-    public ResponseEntity<String> setupAdmin(@Validated @RequestBody Member member)
+            method = RequestMethod.POST)
+    public ResponseEntity<Boolean> setupAdmin(@Validated @RequestBody Member member)
             throws Exception {
         log.info("setupAdmin: member.getUserName(): " + member.getUserName());
         log.info("setupAdmin: service.countAll(): " + service.countAll());
@@ -99,9 +98,9 @@ public class MemberController {
 
             member.setJob("Admin");
 
-            service.setupAdmin(member);
-
-            return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+            Boolean mck =service.setupAdmin(member);
+            log.info("mck: " + mck);
+                return new ResponseEntity<Boolean>(mck, HttpStatus.OK);
 
     }
 
