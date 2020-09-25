@@ -29,7 +29,7 @@ export default {
       .then(({ data }) => {
         commit('CRAWLSTART', data)
         if (window.location.pathname !== '/') {
-          router.push('/')
+          router.push('/CrawlCategory')
         }
       })
   },

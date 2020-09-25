@@ -6,6 +6,7 @@ import SignUp from '../views/SignUp.vue'
 import MyHome from '../views/MyHome.vue'
 import MyHome2 from '../views/MyHome2.vue'
 import StudyRegister from '../views/StudyRegister.vue'
+import CrawlCategory from '../views/CrawlCategory.vue'
 
 Vue.use(VueRouter)
 
@@ -39,6 +40,13 @@ const routes = [
     path: '/StudyRegister',
     name: 'StudyRegister',
     component: StudyRegister
+  },
+  {
+    path: '/CrawlCategory',
+    name: 'CrawlCategory',
+    components: {
+      default: CrawlCategory
+    }
   }
 ]
 
