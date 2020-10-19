@@ -15,7 +15,7 @@ public class DemoApplication {
 	public static void main(String[] args) {
 		HelloSpring hs = new HelloSpring();
 		log.info(hs.print());
-asdfasdf
+
 		SpringApplication.run(DemoApplication.class, args);
 	}
 }
